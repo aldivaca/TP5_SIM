@@ -3,22 +3,22 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package tp5;
 
 /**
  *
  * @author a3
  */
-public class Servidor 
-{
+public class Servidor {
+
     boolean ocupado;
     float tLibre;
     float tInicio;
 
     public Servidor() {
+        ocupado = false;
+        tInicio = 0;
     }
-    
 
     public boolean isOcupado() {
         return ocupado;
@@ -43,7 +43,5 @@ public class Servidor
     public void settInicio(float tInicio) {
         this.tInicio = tInicio;
     }
-    
-    
-    
+
 }

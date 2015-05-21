@@ -11,20 +11,21 @@ package tp5;
  */
 public class Logica {
 
-    Fila f1;
-    Fila f2;
-    
-    public enum Evento{
-        LLEGADA,INICIO,FIN_ARREGLO,INICIO_ATENCION
-    }
-            
-          
+    Fila f1 = null;
+    Fila f2 = null;
 
     public void repeticion() {
 
         if (f1 == null) {
             f1.setReloj(0);
             f1.setEvento("");
+            f1.setCola(0);
+            f1.setServ1(new Servidor());
+            f1.setServ2(new Servidor());
+            f1.setContadorTotal(0);
+            f1.setRechazos(0);
+        } else {
+
         }
     }
 

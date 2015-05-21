@@ -3,15 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package tp5;
 
 /**
  *
  * @author a3
  */
-public class Fila 
-{
+public class Fila {
+
     float reloj;
     String evento;
     LlegadaPC llegada;
@@ -22,7 +21,13 @@ public class Fila
     Arreglo a2;
     int contadorTotal;
     int rechazos;
-    
+
+    public float getProximoTiempo() {
+
+        float lleg, arr1, arr2;
+        lleg = llegada.getProxLlegada();
+        return lleg;
+    }
 
     public float getReloj() {
         return reloj;
@@ -103,8 +108,5 @@ public class Fila
     public void setRechazos(int rechazos) {
         this.rechazos = rechazos;
     }
-    
-    
-    
-    
+
 }

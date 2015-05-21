@@ -3,31 +3,20 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package tp5;
 
 /**
  *
  * @author a3
  */
-public class LlegadaPC 
-{
-    float rnd;
+public class LlegadaPC {
+
     float tiempoLlegada;
     float proxLlegada;
 
-    public LlegadaPC() 
-    {
-        this.rnd = (float)30+(float) Math.random()*60;
-    }    
-    
-
-    public float getRnd() {
-        return rnd;
-    }
-
-    public void setRnd(float rnd) {
-        this.rnd = rnd;
+    public LlegadaPC(float reloj) {
+        this.tiempoLlegada = (float) 30 + (float) Math.random() * (float) 60;
+        this.proxLlegada = reloj + tiempoLlegada;
     }
 
     public float getTiempoLlegada() {
@@ -45,7 +34,5 @@ public class LlegadaPC
     public void setProxLlegada(float proxLlegada) {
         this.proxLlegada = proxLlegada;
     }
-    
-    
-    
+
 }
