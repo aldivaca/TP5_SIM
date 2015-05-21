@@ -19,7 +19,11 @@ public class Logica {
         if (f1 == null) {
             iniciar();
         } else {
+            f1 = new Fila(f2);
+            Evento proxFila = f1.getProximoTiempo();
+            switch (proxFila.getEvento()) {
 
+            }
         }
     }
 
@@ -58,6 +62,19 @@ public class Logica {
                     f2.aumentarRechazos();
                 }
             }
+        }
+    }
+
+    private void generarArreglo(float reloj) {
+        f2 = new Fila(f1);
+        Arreglo arreglo = new Arreglo(reloj);
+        f2.setReloj(reloj);
+        if (f2.getServ1().isOcupado()) {
+            f2.getServ2().setOcupado(true);
+            f2.setA2(arreglo);
+        } else {
+            f2.getServ1().setOcupado(true);
+            f2.setA1(arreglo);
         }
     }
 
