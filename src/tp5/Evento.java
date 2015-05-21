@@ -19,6 +19,11 @@ public class Evento {
         this.evento = evento;
     }
 
+    public Evento(Evento proxEvento) {
+        this.tiempo = proxEvento.getTiempo();
+        this.evento = proxEvento.getEvento();
+    }
+
     public float getTiempo() {
         return tiempo;
     }

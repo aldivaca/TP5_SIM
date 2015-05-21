@@ -12,7 +12,7 @@ package tp5;
 public class Fila {
 
     float reloj;
-    String evento;
+    NombreEvento evento;
     LlegadaPC llegada;
     int cola;
     Servidor serv1;
@@ -22,11 +22,52 @@ public class Fila {
     int contadorTotal;
     int rechazos;
 
-    public float getProximoTiempo() {
+    public Fila(float reloj, NombreEvento evento, LlegadaPC llegada, int cola, Servidor serv1, Servidor serv2, Arreglo a1, Arreglo a2, int contadorTotal, int rechazos) {
+        this.reloj = reloj;
+        this.evento = evento;
+        this.llegada = llegada;
+        this.cola = cola;
+        this.serv1 = serv1;
+        this.serv2 = serv2;
+        this.a1 = a1;
+        this.a2 = a2;
+        this.contadorTotal = contadorTotal;
+        this.rechazos = rechazos;
+    }
 
+    public Fila(Fila f1) {
+        this.reloj = f1.reloj;
+        this.evento = f1.evento;
+        this.llegada = f1.llegada;
+        this.cola = f1.cola;
+        this.serv1 = f1.serv1;
+        this.serv2 = f1.serv2;
+        this.a1 = f1.a1;
+        this.a2 = f1.a2;
+        this.contadorTotal = f1.contadorTotal;
+        this.rechazos = f1.rechazos;
+    }
+
+    public Evento getProximoTiempo() {
+        Evento result;
         float lleg, arr1, arr2;
         lleg = llegada.getProxLlegada();
-        return lleg;
+        arr1 = a1.getProxEvento().getTiempo();
+        arr2 = a2.getProxEvento().getTiempo();
+        if (arr1 > lleg) {
+            if (arr1 > arr2) {
+                result = new Evento(a1.getProxEvento());
+            } else {
+                result = new Evento(a2.getProxEvento());
+            }
+        } else {
+            if (lleg > arr2) {
+                result = new Evento(lleg, NombreEvento.LLEGADA);
+            } else {
+                result = new Evento(a2.getProxEvento());
+            }
+        }
+        return result;
     }
 
     public float getReloj() {
@@ -37,11 +78,11 @@ public class Fila {
         this.reloj = reloj;
     }
 
-    public String getEvento() {
+    public NombreEvento getEvento() {
         return evento;
     }
 
-    public void setEvento(String evento) {
+    public void setEvento(NombreEvento evento) {
         this.evento = evento;
     }
 
@@ -107,6 +148,14 @@ public class Fila {
 
     public void setRechazos(int rechazos) {
         this.rechazos = rechazos;
+    }
+
+    void aumentarCola() {
+        this.cola = cola + 1;
+    }
+
+    void aumentarRechazos() {
+        this.rechazos = rechazos + 1;
     }
 
 }
