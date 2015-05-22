@@ -18,7 +18,7 @@ public class TP5 {
         Logica l = new Logica();
         Fila f2 = l.nuevaFila(null);
         System.out.println("F2: " + f2);
-        for (int i = 2; i < 20; i++) {
+        for (int i = 2; i < 500; i++) {
             f2 = l.nuevaFila(f2);
             System.out.println("F" + i + ": " + f2);
         }

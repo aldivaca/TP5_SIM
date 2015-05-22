@@ -33,6 +33,7 @@ public class Logica {
                     break;
                 case FIN_ARREGLO:
                     atenderCola(proxFila.getTiempo());
+                    f2.aumentarContador();
                     break;
                 case SUSPENSION:
                     atenderCola(proxFila.getTiempo());
@@ -102,16 +103,16 @@ public class Logica {
         f2.setReloj(reloj);
         f2.setEvento(NombreEvento.INICIO_ARREGLO);
         if (f2.getServ1().isOcupado()) {
-            f2.getServ2().setOcupado(true);
+            f2.getServ2().setOcupado(true, reloj);
             f2.setA2(arreglo);
         } else {
-            f2.getServ1().setOcupado(true);
+            f2.getServ1().setOcupado(true, reloj);
             f2.setA1(arreglo);
         }
     }
 
     private void atenderCola(float reloj) {
-        f2.aumentarContador();
+        //f2.aumentarContador();
         if (f1.isTrabajoEnEspera()) {
             generarReinicio(reloj);
         } else {
@@ -129,10 +130,10 @@ public class Logica {
         f2.setReloj(reloj);
         f2.setEvento(NombreEvento.REINICIO_ARREGLO);
         if (f2.getServ1().isOcupado()) {
-            f2.getServ2().setOcupado(true);
+            f2.getServ2().setOcupado(true, reloj);
             f2.setA2(arreglo);
         } else {
-            f2.getServ1().setOcupado(true);
+            f2.getServ1().setOcupado(true, reloj);
             f2.setA1(arreglo);
         }
     }
