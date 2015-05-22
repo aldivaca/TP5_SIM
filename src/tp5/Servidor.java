@@ -44,4 +44,9 @@ public class Servidor {
         this.tInicio = tInicio;
     }
 
+    @Override
+    public String toString() {
+        return "Servidor{" + "ocupado=" + ocupado + ", tLibre=" + tLibre + ", tInicio=" + tInicio + '}';
+    }
+
 }

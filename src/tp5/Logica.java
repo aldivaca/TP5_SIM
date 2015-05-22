@@ -18,18 +18,38 @@ public class Logica {
 
         if (f1 == null) {
             iniciar();
+            System.out.println("F1: " + f1);
+            System.out.println("F2: " + f2);
         } else {
             f1 = new Fila(f2);
+            f2 = new Fila(f1);
+
             Evento proxFila = f1.getProximoTiempo();
             switch (proxFila.getEvento()) {
+                case LLEGADA:
+                    generarLlegada(proxFila.getTiempo());
+                    break;
+                case FIN_ARREGLO:
+                    atenderCola(proxFila.getTiempo());
+                    break;
+                case SUSPENSION:
+                    atenderCola(proxFila.getTiempo());
+                    f2.setTrabajoEnEspera(true);
+                    break;
+                case REINICIO_ARREGLO:
 
+                    break;
             }
+
+            System.out.println("F1: " + f1);
+            System.out.println("F2: " + f2);
         }
     }
 
     private void iniciar() {
+        f1 = new Fila();
         f1.setReloj(0);
-        f1.setEvento(NombreEvento.ESTADO);
+        f1.setEvento(NombreEvento.ESTADO_INICIAL);
         f1.setCola(0);
         f1.setServ1(new Servidor());
         f1.setServ2(new Servidor());
@@ -40,10 +60,8 @@ public class Logica {
 
     private void generarLlegada(float reloj) {
         if (reloj == 0) {
-            LlegadaPC llegada = new LlegadaPC(0);
-            f2.setReloj(reloj);
-            f2.setEvento(NombreEvento.INICIO);
-            f2.setLlegada(llegada);
+            f2 = new Fila();
+            f2.setEvento(NombreEvento.INICIO_SIM);
             f2.setCola(0);
             f2.setServ1(new Servidor());
             f2.setServ2(new Servidor());
@@ -51,23 +69,50 @@ public class Logica {
             f2.setRechazos(0);
         } else {
             f2 = new Fila(f1);
-            LlegadaPC llegada = new LlegadaPC(reloj);
-            f2.setReloj(reloj);
             f2.setEvento(NombreEvento.LLEGADA);
-            f2.setLlegada(llegada);
             if (f1.getServ1().isOcupado() && f1.getServ2().isOcupado()) {
                 if (f1.getCola() < 3) {
                     f2.aumentarCola();
                 } else {
                     f2.aumentarRechazos();
                 }
+            } else {
+                if (f1.getCola() == 0) {
+                    generarArreglo(reloj);
+                }
+            }
+        }
+        LlegadaPC llegada = new LlegadaPC(reloj);
+        f2.setReloj(reloj);
+        f2.setLlegada(llegada);
+
+    }
+
+    private void generarArreglo(float reloj) {
+        Arreglo arreglo = new Arreglo(reloj);
+        f2.setReloj(reloj);
+        if (f2.getServ1().isOcupado()) {
+            f2.getServ2().setOcupado(true);
+            f2.setA2(arreglo);
+        } else {
+            f2.getServ1().setOcupado(true);
+            f2.setA1(arreglo);
+        }
+    }
+
+    private void atenderCola(float reloj) {
+        if (f1.isTrabajoEnEspera()) {
+            generarReinicio(reloj);
+        } else {
+            if (f1.getCola() > 0) {
+                f2.disminuirCola();
+                generarArreglo(reloj);
             }
         }
     }
 
-    private void generarArreglo(float reloj) {
-        f2 = new Fila(f1);
-        Arreglo arreglo = new Arreglo(reloj);
+    private void generarReinicio(float reloj) {
+        Arreglo arreglo = new Arreglo(reloj, 3, 15);
         f2.setReloj(reloj);
         if (f2.getServ1().isOcupado()) {
             f2.getServ2().setOcupado(true);

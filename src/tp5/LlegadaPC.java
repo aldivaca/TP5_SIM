@@ -35,4 +35,9 @@ public class LlegadaPC {
         this.proxLlegada = proxLlegada;
     }
 
+    @Override
+    public String toString() {
+        return "LlegadaPC{" + "tiempoLlegada=" + tiempoLlegada + ", proxLlegada=" + proxLlegada + '}';
+    }
+
 }

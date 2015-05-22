@@ -21,6 +21,11 @@ public class Fila {
     Arreglo a2;
     int contadorTotal;
     int rechazos;
+    boolean trabajoEnEspera = false;
+
+    public Fila() {
+
+    }
 
     public Fila(float reloj, NombreEvento evento, LlegadaPC llegada, int cola, Servidor serv1, Servidor serv2, Arreglo a1, Arreglo a2, int contadorTotal, int rechazos) {
         this.reloj = reloj;
@@ -57,16 +62,35 @@ public class Fila {
         if (arr1 > lleg) {
             if (arr1 > arr2) {
                 result = new Evento(a1.getProxEvento());
+                if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
+                    this.serv1.setOcupado(false);
+                    if (result.getEvento() == NombreEvento.SUSPENSION) {
+                        this.trabajoEnEspera = true;
+                    }
+                }
             } else {
                 result = new Evento(a2.getProxEvento());
+                if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
+                    this.serv2.setOcupado(false);
+                    if (result.getEvento() == NombreEvento.SUSPENSION) {
+                        this.trabajoEnEspera = true;
+                    }
+                }
             }
         } else {
             if (lleg > arr2) {
                 result = new Evento(lleg, NombreEvento.LLEGADA);
             } else {
                 result = new Evento(a2.getProxEvento());
+                if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
+                    this.serv2.setOcupado(false);
+                    if (result.getEvento() == NombreEvento.SUSPENSION) {
+                        this.trabajoEnEspera = true;
+                    }
+                }
             }
         }
+
         return result;
     }
 
@@ -156,6 +180,23 @@ public class Fila {
 
     void aumentarRechazos() {
         this.rechazos = rechazos + 1;
+    }
+
+    void disminuirCola() {
+        this.cola = cola - 1;
+    }
+
+    public boolean isTrabajoEnEspera() {
+        return trabajoEnEspera;
+    }
+
+    public void setTrabajoEnEspera(boolean trabajoEnEspera) {
+        this.trabajoEnEspera = trabajoEnEspera;
+    }
+
+    @Override
+    public String toString() {
+        return "Fila{" + "reloj=" + reloj + ", evento=" + evento + ", llegada=" + llegada + ", cola=" + cola + ", serv1=" + serv1 + ", serv2=" + serv2 + ", a1=" + a1 + ", a2=" + a2 + ", contadorTotal=" + contadorTotal + ", rechazos=" + rechazos + ", trabajoEnEspera=" + trabajoEnEspera + '}';
     }
 
 }

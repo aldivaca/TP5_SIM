@@ -11,6 +11,26 @@ package tp5;
  */
 public enum NombreEvento {
 
-    LLEGADA, FIN_ARREGLO, INICIO_ATENCION, INICIO, SERVIDOR_LIBRE, REINICIO_ARREGLO, ESTADO;
+    LLEGADA, FIN_ARREGLO, INICIO_SIM, SUSPENSION, REINICIO_ARREGLO, ESTADO_INICIAL;
+
+    @Override
+    public String toString() {
+        switch (this) {
+            case LLEGADA:
+                return "Llegada de PC";
+            case FIN_ARREGLO:
+                return "Fin de Arreglo de PC";
+            case INICIO_SIM:
+                return "Inicio de Simulacion";
+            case SUSPENSION:
+                return "Suspensión de trabajo C";
+            case REINICIO_ARREGLO:
+                return "Reinicio de trabajo suspendido";
+            case ESTADO_INICIAL:
+                return "Vector Estado";
+            default:
+                return "ERROR";
+        }
+    }
 
 }
