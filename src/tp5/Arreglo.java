@@ -27,6 +27,7 @@ public class Arreglo {
         if (tipo == 3) {
             tiempoSuspension = reloj + 15f;
             tiempoReinicio = fin - 15;
+            suspendido= true;
         }
 //        System.out.println("GENERO ARREGLO TIPO " + tipo + " CON DURACION DE " + tiempoArreglo + " ENTRE " + reloj + fin);
 
@@ -107,6 +108,14 @@ public class Arreglo {
 
     public void setFin(float fin) {
         this.fin = fin;
+    }
+
+    public boolean isSuspendido() {
+        return suspendido;
+    }
+
+    public void setSuspendido(boolean suspendido) {
+        this.suspendido = suspendido;
     }
 
     private void asignarTipo() {
