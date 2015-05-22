@@ -55,6 +55,7 @@ public class Fila {
 
     public Evento getProximoTiempo() {
         Evento result;
+        int servidorModif=0;
         float lleg, arr1, arr2;
         lleg = llegada.getProxLlegada();
         if (a1 != null) {
@@ -71,7 +72,7 @@ public class Fila {
             if (arr1 < arr2) {
                 result = new Evento(a1.getProxEvento());
                 if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
-                    this.serv1.setOcupado(false);
+                    servidorModif=1;
                     this.a1 = null;
                     if (result.getEvento() == NombreEvento.SUSPENSION) {
                         this.trabajoEnEspera = true;
@@ -80,7 +81,7 @@ public class Fila {
             } else {
                 result = new Evento(a2.getProxEvento());
                 if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
-                    this.serv2.setOcupado(false);
+                    servidorModif=2;
                     this.a2 = null;
                     if (result.getEvento() == NombreEvento.SUSPENSION) {
                         this.trabajoEnEspera = true;
@@ -93,7 +94,7 @@ public class Fila {
             } else {
                 result = new Evento(a2.getProxEvento());
                 if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
-                    this.serv2.setOcupado(false);
+                    servidorModif=2;
                     this.a2 = null;
                     if (result.getEvento() == NombreEvento.SUSPENSION) {
                         this.trabajoEnEspera = true;
@@ -101,6 +102,14 @@ public class Fila {
                 }
             }
 
+        }
+        if(result.getEvento()!=NombreEvento.LLEGADA){
+            if(servidorModif==2){
+                this.serv2.setOcupado(false, result.getTiempo());
+            }
+            if(servidorModif==1){
+                this.serv1.setOcupado(false, result.getTiempo());
+            }
         }
 //        System.out.println("-----EL PROXIMO EVENTO SERÁ EL MAS CERCANO QUE ES " + result);
         return result;

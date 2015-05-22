@@ -24,8 +24,13 @@ public class Servidor {
         return ocupado;
     }
 
-    public void setOcupado(boolean ocupado) {
+    public void setOcupado(boolean ocupado, float reloj) {
         this.ocupado = ocupado;
+        if(ocupado){
+            tLibre+=(reloj-tInicio);
+        }else{
+            tInicio=reloj;
+        }
     }
 
     public float gettLibre() {
