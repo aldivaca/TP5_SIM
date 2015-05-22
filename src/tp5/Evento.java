@@ -40,4 +40,9 @@ public class Evento {
         this.evento = evento;
     }
 
+    @Override
+    public String toString() {
+        return "Evento{" + "tiempo=" + tiempo + ", evento=" + evento + '}';
+    }
+
 }

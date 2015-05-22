@@ -57,13 +57,22 @@ public class Fila {
         Evento result;
         float lleg, arr1, arr2;
         lleg = llegada.getProxLlegada();
-        arr1 = a1.getProxEvento().getTiempo();
-        arr2 = a2.getProxEvento().getTiempo();
-        if (arr1 > lleg) {
-            if (arr1 > arr2) {
+        if (a1 != null) {
+            arr1 = a1.getProxEvento().getTiempo();
+        } else {
+            arr1 = lleg + 1;
+        }
+        if (a2 != null) {
+            arr2 = a2.getProxEvento().getTiempo();
+        } else {
+            arr2 = lleg + 2;
+        }
+        if (arr1 < lleg) {
+            if (arr1 < arr2) {
                 result = new Evento(a1.getProxEvento());
                 if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
                     this.serv1.setOcupado(false);
+                    this.a1 = null;
                     if (result.getEvento() == NombreEvento.SUSPENSION) {
                         this.trabajoEnEspera = true;
                     }
@@ -72,25 +81,28 @@ public class Fila {
                 result = new Evento(a2.getProxEvento());
                 if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
                     this.serv2.setOcupado(false);
+                    this.a2 = null;
                     if (result.getEvento() == NombreEvento.SUSPENSION) {
                         this.trabajoEnEspera = true;
                     }
                 }
             }
         } else {
-            if (lleg > arr2) {
+            if (lleg < arr2) {
                 result = new Evento(lleg, NombreEvento.LLEGADA);
             } else {
                 result = new Evento(a2.getProxEvento());
                 if (result.getEvento() == NombreEvento.FIN_ARREGLO || result.getEvento() == NombreEvento.SUSPENSION) {
                     this.serv2.setOcupado(false);
+                    this.a2 = null;
                     if (result.getEvento() == NombreEvento.SUSPENSION) {
                         this.trabajoEnEspera = true;
                     }
                 }
             }
-        }
 
+        }
+//        System.out.println("-----EL PROXIMO EVENTO SERÁ EL MAS CERCANO QUE ES " + result);
         return result;
     }
 
@@ -197,6 +209,10 @@ public class Fila {
     @Override
     public String toString() {
         return "Fila{" + "reloj=" + reloj + ", evento=" + evento + ", llegada=" + llegada + ", cola=" + cola + ", serv1=" + serv1 + ", serv2=" + serv2 + ", a1=" + a1 + ", a2=" + a2 + ", contadorTotal=" + contadorTotal + ", rechazos=" + rechazos + ", trabajoEnEspera=" + trabajoEnEspera + '}';
+    }
+
+    void aumentarContador() {
+        this.contadorTotal = contadorTotal + 1;
     }
 
 }

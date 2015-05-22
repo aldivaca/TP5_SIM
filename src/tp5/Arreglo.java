@@ -23,35 +23,49 @@ public class Arreglo {
         asignarTipo();
         asignarTiempo();
 
+        fin = reloj + tiempoArreglo;
         if (tipo == 3) {
             tiempoSuspension = reloj + 15f;
-            fin = reloj + tiempoArreglo;
             tiempoReinicio = fin - 15;
-        } else {
-            fin = reloj + tiempoArreglo;
         }
+//        System.out.println("GENERO ARREGLO TIPO " + tipo + " CON DURACION DE " + tiempoArreglo + " ENTRE " + reloj + fin);
+
     }
 
-    Arreglo(float reloj, int i, int i0) {
+    public Arreglo() {
+        media = 0;
+        tipo = 0; //1:a 2:B 3:C 4:D 5:E
+        tiempoArreglo = 0f;
+        tiempoSuspension = 0f;
+        tiempoReinicio = 0f;
+        fin = 0f;
+        suspendido = false;
+
+    }
+
+    public Arreglo(float reloj, int i, int i0) {
         this.tipo = i;
         this.tiempoArreglo = i0;
         this.fin = reloj + i0;
     }
 
     public Evento getProxEvento() {
-        Evento result;
-        if (suspendido) {
-            result = new Evento(tiempoReinicio, NombreEvento.REINICIO_ARREGLO);
-            suspendido = false;
-        } else {
-            if (tiempoSuspension != 0) {
-                result = new Evento(tiempoSuspension, NombreEvento.SUSPENSION);
-                tiempoSuspension = 0;
-                suspendido = true;
+        Evento result = null;
+        if (tiempoArreglo != 0) {
+            if (suspendido) {
+                result = new Evento(tiempoReinicio, NombreEvento.REINICIO_ARREGLO);
+                suspendido = false;
             } else {
-                result = new Evento(fin, NombreEvento.FIN_ARREGLO);
+                if (tiempoSuspension != 0) {
+                    result = new Evento(tiempoSuspension, NombreEvento.SUSPENSION);
+                    tiempoSuspension = 0;
+                    suspendido = true;
+                } else {
+                    result = new Evento(fin, NombreEvento.FIN_ARREGLO);
+                }
             }
         }
+//        System.out.println("PROXIMO EVENTO SEGUN ARREGLO ES " + result);
         return result;
     }
 

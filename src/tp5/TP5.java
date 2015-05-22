@@ -15,7 +15,14 @@ public class TP5 {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        new Logica().nuevaFila();
+        Logica l = new Logica();
+        Fila f2 = l.nuevaFila(null);
+        System.out.println("F2: " + f2);
+        for (int i = 2; i < 20; i++) {
+            f2 = l.nuevaFila(f2);
+            System.out.println("F" + i + ": " + f2);
+        }
+
     }
 
 }
