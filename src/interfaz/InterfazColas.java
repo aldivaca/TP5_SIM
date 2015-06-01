@@ -6,9 +6,12 @@
 package interfaz;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import tp5.Fila;
 import tp5.Logica;
+import tp5.NombreEvento;
 
 /**
  *
@@ -24,6 +27,8 @@ public class InterfazColas extends javax.swing.JFrame {
 
     DefaultTableModel modelo = new DefaultTableModel();
     ArrayList<Fila> ress = new ArrayList<>();
+    HashMap<Integer, Float> h;
+    int cont, contTerminado;
 
     public InterfazColas() {
         initComponents();
@@ -70,6 +75,11 @@ public class InterfazColas extends javax.swing.JFrame {
         lblSimular.setText("Simular:");
 
         txtSimular.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtSimular.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtSimularKeyTyped(evt);
+            }
+        });
 
         lblDias.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         lblDias.setText("días");
@@ -93,11 +103,21 @@ public class InterfazColas extends javax.swing.JFrame {
         lblDesde.setText("Mostras desde día nro:");
 
         txtDiaDesde.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtDiaDesde.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDiaDesdeKeyTyped(evt);
+            }
+        });
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel1.setText("hasta");
 
         txtDiaHasta.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
+        txtDiaHasta.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtDiaHastaKeyTyped(evt);
+            }
+        });
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 12)); // NOI18N
         jLabel2.setText("Promedio de permanencia en el laboratorio de un equipo:");
@@ -229,14 +249,44 @@ public class InterfazColas extends javax.swing.JFrame {
 
     private void btnSimularActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSimularActionPerformed
 
-        Clear_Table();
-        refreshTable();
+        if(validar())
+        {
+            Clear_Table();
+            refreshTable();
 
-        float tiempo = convertDaysToMinutes(Integer.parseInt(this.txtSimular.getText()));
+            float tiempo = convertDaysToMinutes(Integer.parseInt(this.txtSimular.getText()));
 
-        while (f.getReloj() <= tiempo) {
-            
-            f = l.nuevaFila(f);
+            h = new HashMap();
+            cont = 0;
+            contTerminado = 0;
+
+            while (f.getReloj() <= tiempo) {
+
+                switch (f.getEvento()) {
+                    case LLEGADA:
+                        cont++;
+                        h.put(cont, f.getReloj());
+                        break;
+                    case FIN_ARREGLO:
+                        contTerminado++;
+                        float aux = h.get(contTerminado);
+                        h.put(contTerminado, f.getReloj() - aux);
+                        break;
+                }
+
+                f = l.nuevaFila(f);
+
+                if (!"".equals(this.txtDiaDesde.getText())) {
+                    if (!"".equals(this.txtDiaHasta.getText())) {
+                        float desde = convertDaysToMinutes(Integer.parseInt(this.txtDiaDesde.getText()));
+                        float hasta = convertDaysToMinutes(Integer.parseInt(this.txtDiaHasta.getText()));
+                        refreshTable(desde, hasta);
+                    }
+                } else {
+                    refreshTable();
+                }
+
+            }
 
             if (!"".equals(this.txtDiaDesde.getText())) {
                 if (!"".equals(this.txtDiaHasta.getText())) {
@@ -248,24 +298,54 @@ public class InterfazColas extends javax.swing.JFrame {
                 refreshTable();
             }
 
-        }
+            calcularPromedio(h);
 
-        if (!"".equals(this.txtDiaDesde.getText())) {
-            if (!"".equals(this.txtDiaHasta.getText())) {
-                float desde = convertDaysToMinutes(Integer.parseInt(this.txtDiaDesde.getText()));
-                float hasta = convertDaysToMinutes(Integer.parseInt(this.txtDiaHasta.getText()));
-                refreshTable(desde, hasta);
-            }
-        } else {
-            refreshTable();
+            float rechazo = calcularPorcentajeRechazo();
+            String r = "" + rechazo;
+            this.txtNoAt.setText(r);
+
+            this.txtOcupacionT.setText("" + porcentajeOcupacion());
         }
-        
-        float rechazo= calcularPorcentajeRechazo();
-        String r= ""+rechazo;
-        this.txtNoAt.setText(r);
-        
-        this.txtOcupacionT.setText(""+porcentajeOcupacion());
     }//GEN-LAST:event_btnSimularActionPerformed
+
+    private void txtSimularKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtSimularKeyTyped
+        String texto = txtSimular.getText();
+        int cantDig = 0;
+        for (int i = 0; i < texto.length(); i++) {
+            cantDig++;
+        }
+        char c = evt.getKeyChar();
+        if (Character.isDigit(c) && cantDig < 7) {
+            return;
+        }
+        evt.consume();
+    }//GEN-LAST:event_txtSimularKeyTyped
+
+    private void txtDiaDesdeKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiaDesdeKeyTyped
+        String texto = txtDiaDesde.getText();
+        int cantDig = 0;
+        for (int i = 0; i < texto.length(); i++) {
+            cantDig++;
+        }
+        char c = evt.getKeyChar();
+        if (Character.isDigit(c) && cantDig < 7) {
+            return;
+        }
+        evt.consume();
+    }//GEN-LAST:event_txtDiaDesdeKeyTyped
+
+    private void txtDiaHastaKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDiaHastaKeyTyped
+        String texto = txtDiaHasta.getText();
+        int cantDig = 0;
+        for (int i = 0; i < texto.length(); i++) {
+            cantDig++;
+        }
+        char c = evt.getKeyChar();
+        if (Character.isDigit(c) && cantDig < 7) {
+            return;
+        }
+        evt.consume();
+    }//GEN-LAST:event_txtDiaHastaKeyTyped
 
     /**
      * @param args the command line arguments
@@ -497,15 +577,11 @@ public class InterfazColas extends javax.swing.JFrame {
             }
             res[14] = f2.getA2().getTiempo();
             res[15] = f2.getA2().getFin();
-            if (f2.getA2().isSuspendido()) 
-            {
+            if (f2.getA2().isSuspendido()) {
                 res[16] = "Si";
-            }
-            else
-            {
+            } else {
                 res[16] = "No";
             }
-            
 
         }
         modelo.addRow(res);
@@ -516,26 +592,48 @@ public class InterfazColas extends javax.swing.JFrame {
         modelo.setRowCount(0);
         tableColas.revalidate();
         tableColas.repaint();
+        cont = 0;
+        contTerminado = 0;
 //        modelo = (DefaultTableModel) this.tblSimulacion.getModel();
 //        for (int i = 0; i < tblSimulacion.getRowCount(); i++) {
 //            modelo.removeRow(i);
 //            i -= 1;
     }
-    
-    private float calcularPorcentajeRechazo()
-    {
+
+    private float calcularPorcentajeRechazo() {
         float res;
-        res= (f.getRechazos()*100)/f.getContadorTotal();
-        System.out.println("r"+ f.getRechazos());
+        res = (f.getRechazos() * 100) / f.getContadorTotal();
+        System.out.println("r" + f.getRechazos());
         return res;
     }
-    
-    private float porcentajeOcupacion()
-    {
-        float ocupacion1= f.getReloj()-f.getServ1().gettLibre();
-        float ocupacion2= f.getReloj()-f.getServ2().gettLibre();
-        float prom= (ocupacion1+ocupacion2)/2;
-        float porcentaje= prom*100/f.getReloj();
+
+    private float porcentajeOcupacion() {
+        float ocupacion1 = f.getReloj() - f.getServ1().gettLibre();
+        float ocupacion2 = f.getReloj() - f.getServ2().gettLibre();
+        float prom = (ocupacion1 + ocupacion2) / 2;
+        float porcentaje = prom * 100 / f.getReloj();
         return porcentaje;
+    }
+
+    private void calcularPromedio(HashMap<Integer, Float> h) {
+        float suma = 0;
+        for (int i = 1; i < h.size() + 1; i++) {
+            suma += h.get(i);
+        }
+        float prom = suma / h.size();
+
+        txtPermanencia.setText("" + prom);
+    }
+    
+    private boolean validar(){
+        if(txtDiaDesde.getText().length()>txtDiaHasta.getText().length()){
+            JOptionPane.showMessageDialog(rootPane, "El día HASTA debe ser mayor al día DESDE", "HASTA mayor a DESDE", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        if(Integer.parseInt(txtSimular.getText()) < Integer.parseInt(txtDiaHasta.getText())){
+            JOptionPane.showMessageDialog(rootPane, "El día HASTA excede la cantidad de días a SIMULAR", "Límite superior demasiado grande", JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+        return true;
     }
 }
